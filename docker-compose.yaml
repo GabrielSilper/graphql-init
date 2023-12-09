@@ -1,0 +1,35 @@
+# mongo e node
+version: '3.1'
+services:
+  mongo:
+    image: mongo
+    container_name: mongo-db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+  api:
+    container_name: graphql-api
+    image: node:16
+    restart: always
+    ports:
+      - 3001:3001
+      - 9229:9229
+    environment:
+      - DB_HOST=mongo
+      - DB_NAME=graphql-api
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - SERVER_PORT=3001
+      - JWT_SECRET=façoUmaQuandoUsarORailway
+    volumes:
+      - ./:/usr/app
+    working_dir: /usr/app
+    command: bash
+    # As duas opções abaixo correspondem ao -it
+    tty: true # -t
+    stdin_open: true #-i
+    depends_on:
+      - mongo
